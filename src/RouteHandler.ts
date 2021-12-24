@@ -1,6 +1,5 @@
 export class RouteHandler {
   public async handle({ route, method, body }: { route: any; method: string; body?: any }) {
-    console.log(route)
     switch (method) {
       case "GET":
         return await this.get(route)
@@ -15,6 +14,14 @@ export class RouteHandler {
 
   private async get(route: any) {
     const data = await Deno.readTextFile(route.filePath)
+    if (route.params?.id) {
+      const item = JSON.parse(data).find((d: any) => d.id == route.params?.id)
+      if (!item) {
+        throw new Error(`Item with id ${route.params?.id} not found`)
+      }
+
+      return JSON.stringify(item)
+    }
     return data
   }
 
@@ -44,12 +51,12 @@ export class RouteHandler {
     try {
       if (data.startsWith("[") && data.endsWith("]")) {
         const parsedData = JSON.parse(data)
-        const dataToUpdate = parsedData.find((d: any) => d.id == route.params.id)
+        let dataToUpdate = parsedData.find((d: any) => d.id == route.params?.id)
         if (!dataToUpdate) {
-          throw new Error(`Item with id ${route.params.id} not found`)
+          throw new Error(`Item with id ${route.params?.id} not found`)
         }
 
-        parsedData[dataToUpdate.id - 1] = { ...dataToUpdate, ...body, id: dataToUpdate.id }
+        dataToUpdate = { ...dataToUpdate, ...body, id: dataToUpdate.id }
         await Deno.writeTextFile(route.filePath, JSON.stringify(parsedData))
       }
     } catch (e) {
@@ -64,14 +71,12 @@ export class RouteHandler {
 
     try {
       if (data.startsWith("[") && data.endsWith("]")) {
-        const parsedData = JSON.parse(data)
-        const dataToDelete = parsedData.find((d: any) => d.id == route.params.id)
-        if (!dataToDelete) {
-          throw new Error(`Item with id ${route.params.id} not found`)
+        const leftData = JSON.parse(data).filter((d: any) => d.id != route.params?.id)
+        if (!leftData) {
+          throw new Error(`Item with id ${route.params?.id} not found`)
         }
 
-        parsedData[dataToDelete.id - 1] = undefined
-        await Deno.writeTextFile(route.filePath, JSON.stringify(parsedData))
+        await Deno.writeTextFile(route.filePath, JSON.stringify(leftData))
       }
     } catch (e) {
       throw new Error("Invalid JSON file")
