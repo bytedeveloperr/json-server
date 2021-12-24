@@ -1,6 +1,6 @@
 ### json-server
 
-A simple json api server written in Deno. It's useful for frontend developers who need a quick backend for prototyping without coding
+A simple json api server written in Deno. It's useful for frontend developers who need a quick backend for prototyping without coding a server
 
 ### Usage
 
@@ -51,7 +51,7 @@ You can find more [here](https://deno.land/)
 Now that you have deno installed, you can install json server
 
 ```
-deno install -Af https://x.nest.land/live-server@0.0.2/json-server.ts
+deno install -Af https://x.nest.land/json-server@0.0.1/json-server.ts
 ```
 
 Once, installation is complete you can start the JSON server by running

@@ -1,10 +1,10 @@
 {
   "$schema": "https://x.nest.land/eggs@0.3.10/src/schema.json",
-  "name": "live-server",
+  "name": "json-server",
   "entry": "./json-server.ts",
   "description": "A simple json API server",
   "homepage": "https://github.com/devYusuf/json-server",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "releaseType": null,
   "unstable": true,
   "unlisted": false,
