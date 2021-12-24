@@ -51,12 +51,12 @@ export class RouteHandler {
     try {
       if (data.startsWith("[") && data.endsWith("]")) {
         const parsedData = JSON.parse(data)
-        let dataToUpdate = parsedData.find((d: any) => d.id == route.params?.id)
-        if (!dataToUpdate) {
+        let dataToUpdateIndex = parsedData.findIndex((d: any) => d.id == route.params?.id)
+        if (dataToUpdateIndex == -1) {
           throw new Error(`Item with id ${route.params?.id} not found`)
         }
 
-        dataToUpdate = { ...dataToUpdate, ...body, id: dataToUpdate.id }
+        parsedData[dataToUpdateIndex] = { ...parsedData[dataToUpdateIndex], ...body, id: parsedData[dataToUpdateIndex].id }
         await Deno.writeTextFile(route.filePath, JSON.stringify(parsedData))
       }
     } catch (e) {
